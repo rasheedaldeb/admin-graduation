@@ -88,79 +88,85 @@ const AdvertisementSection = () => {
         className="border-primary h-[50px] w-full rounded-3xl border px-3 outline-none"
         dir="rtl"
       />
-      <div className="addvs grid grid-cols-4 gap-5">
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <Oval
-              visible={true}
-              height="40"
-              width="40"
-              color="rgb(23, 43, 78)"
-              ariaLabel="oval-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-            />
-          </div>
-        ) : (
-          advertisement
-            .filter((item) => item.content.toLowerCase().includes(inputValue))
-            .map((item) => (
-              <div className="addv flex flex-col items-center gap-2">
-                <ModalImage
-                  small={`${import.meta.env.VITE_API_URL}${item.imageUrl}`}
-                  large={`${import.meta.env.VITE_API_URL}${item.imageUrl}`}
-                  loading="lazy"
-                  alt="add"
-                  className="h-[250px]"
-                />
-                <p className="text-secondary text-xl">{item.content}</p>
-                <div className="flex flex-col items-center gap-2">
-                  <button
-                    onClick={() => {
-                      setAdId(item.id);
-                      confirmToggle(item.id);
-                    }}
-                    className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-red-600 text-white"
-                  >
-                    حذف
-                  </button>
-                  <div
-                    className={`${confirm === item.id ? "flex" : "hidden"} flex-col items-center gap-2`}
-                  >
-                    <p text-xl text-secondary>
-                      هل انت متأكد من الحذف؟
-                    </p>
+      {isLoading ? (
+        <div className="flex items-center justify-center">
+          <Oval
+            visible={true}
+            height="40"
+            width="40"
+            color="rgb(23, 43, 78)"
+            ariaLabel="oval-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        </div>
+      ) : (
+        <div className="addvs grid grid-cols-4 gap-5">
+          {advertisement.length !== 0 ? (
+            advertisement
+              .filter((item) => item.content.toLowerCase().includes(inputValue))
+              .map((item) => (
+                <div className="addv flex flex-col items-center gap-2">
+                  <ModalImage
+                    small={`${import.meta.env.VITE_API_URL}${item.imageUrl}`}
+                    large={`${import.meta.env.VITE_API_URL}${item.imageUrl}`}
+                    loading="lazy"
+                    alt="add"
+                    className="h-[250px]"
+                  />
+                  <p className="text-secondary text-xl">{item.content}</p>
+                  <div className="flex flex-col items-center gap-2">
                     <button
                       onClick={() => {
-                        deleteAd();
+                        setAdId(item.id);
+                        confirmToggle(item.id);
                       }}
-                      className="bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white"
+                      className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-red-600 text-white"
                     >
-                      {isDeleting ? (
-                        <Oval
-                          visible={true}
-                          height="30"
-                          width="30"
-                          color="#fff"
-                          ariaLabel="oval-loading"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                        />
-                      ) : (
-                        "تأكيد"
-                      )}
+                      حذف
                     </button>
+                    <div
+                      className={`${confirm === item.id ? "flex" : "hidden"} flex-col items-center gap-2`}
+                    >
+                      <p text-xl text-secondary>
+                        هل انت متأكد من الحذف؟
+                      </p>
+                      <button
+                        onClick={() => {
+                          deleteAd();
+                        }}
+                        className="bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white"
+                      >
+                        {isDeleting ? (
+                          <Oval
+                            visible={true}
+                            height="30"
+                            width="30"
+                            color="#fff"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                          />
+                        ) : (
+                          "تأكيد"
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-        )}
-        {error && (
-          <div className="flex items-center justify-center text-xl text-red-600">
-            {error}
-          </div>
-        )}
-      </div>
+              ))
+          ) : (
+            <div className="flex items-center justify-center">
+              <p className="text-secondary text-xl">لايوجد اعلانات</p>
+            </div>
+          )}
+          {error && (
+            <div className="flex items-center justify-center text-xl text-red-600">
+              {error}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 };

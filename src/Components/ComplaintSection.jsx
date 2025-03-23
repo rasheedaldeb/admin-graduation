@@ -71,33 +71,43 @@ const ComplaintSection = () => {
             wrapperClass=""
           />
         </div>
-      ) : (
-        <div className="complaints max-h-screen overflow-y-scroll" dir="rtl">
-          <div className="complaint border-primary flex items-center justify-between border-b pb-3">
-            <div className="name flex flex-col items-center gap-3">
-              <h4 className="text-primary text-xl font-bold">اسم المستخدم</h4>
-              <p className="text-secondary text-lg font-bold">رشيد</p>
-            </div>
-            <div className="company flex flex-col items-center gap-3">
-              <h4 className="text-primary text-xl font-bold">اسم الشركة</h4>
-              <p className="text-secondary text-lg font-bold">رشيد</p>
-            </div>
-            <div className="complaint-content flex w-[50%] flex-col items-center gap-3">
-              <h4 className="text-primary text-xl font-bold">الشكوى</h4>
-              <p className="text-secondary text-lg font-bold">test test test</p>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <button className="cursor-pointer rounded-xl bg-red-500 px-6 py-3 text-white">
-                حذف
-              </button>
-              <p className={`text-secondary text-xl`}>هل انت متأكد من الحذف</p>
-              <button
-                className={`bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
-              >
-                تأكيد
-              </button>
+      ) : allComplaints.length !== 0 ? (
+        allComplaints.map((item) => (
+          <div className="complaints max-h-screen overflow-y-scroll" dir="rtl">
+            <div className="complaint border-primary flex items-center justify-between border-b pb-3">
+              <div className="name flex flex-col items-center gap-3">
+                <h4 className="text-primary text-xl font-bold">اسم المستخدم</h4>
+                <p className="text-secondary text-lg font-bold">رشيد</p>
+              </div>
+              <div className="company flex flex-col items-center gap-3">
+                <h4 className="text-primary text-xl font-bold">اسم الشركة</h4>
+                <p className="text-secondary text-lg font-bold">رشيد</p>
+              </div>
+              <div className="complaint-content flex w-[50%] flex-col items-center gap-3">
+                <h4 className="text-primary text-xl font-bold">الشكوى</h4>
+                <p className="text-secondary text-lg font-bold">
+                  test test test
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <button className="cursor-pointer rounded-xl bg-red-500 px-6 py-3 text-white">
+                  حذف
+                </button>
+                <p className={`text-secondary text-xl`}>
+                  هل انت متأكد من الحذف
+                </p>
+                <button
+                  className={`bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
+                >
+                  تأكيد
+                </button>
+              </div>
             </div>
           </div>
+        ))
+      ) : (
+        <div className="flex items-center justify-center">
+          <p className="text-secondary text-xl">لا يوجد شكاوي</p>
         </div>
       )}
       {error && (
