@@ -10,10 +10,11 @@ const CompaniesSection = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
   // delete states
-  const [companyId, setCompanyId] = useState("");
   const [confirm, setConfirm] = useState(null);
   const { isDeleted, setIsDeleted } = useContext(StatesContext);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   // fetch companies states
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,10 +60,10 @@ const CompaniesSection = () => {
     setConfirm(i);
   };
   // delete api request
-  const deleteCompany = async () => {
+  const deleteCompany = async (id) => {
     setIsDeleting(true);
     await axios
-      .delete(`${import.meta.env.VITE_API_URL}/api/auth/account/${companyId}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/api/auth/account/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,13 +71,19 @@ const CompaniesSection = () => {
       .then((res) => {
         console.log(res);
         setIsDeleting(false);
+        setDeleteSuccess(res.data.message);
         setTimeout(() => {
+          setDeleteSuccess("");
           setIsDeleted(!isDeleted);
         }, 2000);
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
+        setDeleteError(err.response.data.message);
+        setTimeout(() => {
+          setDeleteError("");
+        }, 2000);
         if (err.status === 401) {
           alert(err.response.data.message);
           localStorage.removeItem("admintoken");
@@ -94,6 +101,16 @@ const CompaniesSection = () => {
         className="border-primary h-[50px] w-full rounded-3xl border px-3 outline-none"
         dir="rtl"
       />
+      {deleteSuccess && (
+        <div className="flex items-center justify-center text-xl text-green-500">
+          {deleteSuccess}
+        </div>
+      )}
+      {deleteError && (
+        <div className="flex items-center justify-center text-xl text-red-500">
+          {deleteError}
+        </div>
+      )}
       <div className="companies max-h-screen overflow-y-scroll" dir="rtl">
         {isLoading ? (
           <div className="flex items-center justify-center">
@@ -145,7 +162,6 @@ const CompaniesSection = () => {
                 <div className="delete flex flex-col items-center gap-2">
                   <button
                     onClick={() => {
-                      setCompanyId(item.id);
                       confirmToggle(item.id);
                     }}
                     className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-red-600 text-white"
@@ -159,7 +175,7 @@ const CompaniesSection = () => {
                   </p>
                   <button
                     onClick={() => {
-                      deleteCompany();
+                      deleteCompany(item.id);
                     }}
                     className={`${confirm === item.id ? "" : "hidden"} bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
                   >
