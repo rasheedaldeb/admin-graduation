@@ -8,6 +8,8 @@ import Complaint from "./Pages/Complaint";
 import RegistrationUsers from "./Pages/RegistrationUsers";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import StatesPosts from "./Pages/StatesPosts";
+import Reservation from "./Pages/Reservation";
+import Transaction from "./Pages/Transactions";
 function App() {
   return (
     <>
@@ -21,6 +23,8 @@ function App() {
             <Route path="/companies" element={<Companies />} />
             <Route path="/complaints" element={<Complaint />} />
             <Route path="/users" element={<RegistrationUsers />} />
+            <Route path="/reservation" element={<Reservation />} />
+            <Route path="/transactions" element={<Transaction />} />
           </Route>
         </Routes>
       </StatesProvider>

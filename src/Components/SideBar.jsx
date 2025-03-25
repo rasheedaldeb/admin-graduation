@@ -67,7 +67,7 @@ const SideBar = () => {
       });
   };
   return (
-    <aside className="border-primary fixed top-0 right-0 flex h-full w-[20%] flex-col items-center gap-3 overflow-hidden border-l">
+    <aside className="border-primary fixed top-0 right-0 flex h-screen w-[20%] flex-col items-center gap-3 overflow-y-scroll border-l">
       <div className="logo">
         <img
           src="/images/logo.png"
@@ -102,10 +102,26 @@ const SideBar = () => {
           </li>
           <li>
             <Link
-              to="/states-posts"
+              to="/transactions"
               className="text-secondary text-xl font-bold"
             >
+              عمليات الدفع
+            </Link>
+          </li>
+          <li className="text-center">
+            <Link
+              to="/states-posts"
+              className="text-secondary w-full text-center text-xl font-bold"
+            >
               المنشورات المعلقة و المرفوضة
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/reservation"
+              className="text-secondary text-xl font-bold"
+            >
+              الحجوزات
             </Link>
           </li>
           <li>
