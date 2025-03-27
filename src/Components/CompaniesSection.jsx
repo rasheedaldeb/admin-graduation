@@ -126,7 +126,9 @@ const CompaniesSection = () => {
           </div>
         ) : companiesData.length !== 0 ? (
           companiesData
-            .filter((item) => item.name.toLowerCase().includes(inputValue))
+            .filter((item) =>
+              item.name.toLowerCase().includes(inputValue.toLowerCase()),
+            )
             .map((item) => (
               <div className="company border-primary flex items-center justify-between border-b pb-3">
                 <div className="name flex flex-col items-center gap-3">

@@ -5,6 +5,7 @@ import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 const ComplaintSection = () => {
+  const [inputValue, setInputValue] = useState("");
   const token = localStorage.getItem("admintoken");
   const navigate = useNavigate();
   // complaints states
@@ -95,6 +96,7 @@ const ComplaintSection = () => {
         placeholder="ابحث"
         className="border-primary h-[50px] w-full rounded-3xl border px-3 outline-none"
         dir="rtl"
+        onChange={(e) => setInputValue(e.target.value)}
       />
       {success && (
         <div className="flex items-center justify-center text-xl text-green-500">
@@ -119,68 +121,76 @@ const ComplaintSection = () => {
           />
         </div>
       ) : allComplaints.length !== 0 ? (
-        allComplaints.map((item) => (
-          <>
-            <div
-              className="complaints max-h-screen overflow-y-scroll"
-              dir="rtl"
-            >
-              <div className="complaint border-primary flex items-center justify-between border-b pb-3">
-                <div className="name flex flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">
-                    اسم المستخدم
-                  </h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.Customer.Account.name}
-                  </p>
-                </div>
-                <div className="company flex flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">اسم الشركة</h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.Company.Account.name}
-                  </p>
-                </div>
-                <div className="complaint-content flex w-[50%] flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">الشكوى</h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.content}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <button
-                    onClick={() => confirmToggle(item.id)}
-                    className="cursor-pointer rounded-xl bg-red-500 px-6 py-3 text-white"
-                  >
-                    حذف
-                  </button>
-                  <p
-                    className={`${confirm === item.id ? "block" : "hidden"} text-secondary text-xl`}
-                  >
-                    هل انت متأكد من الحذف
-                  </p>
-                  <button
-                    onClick={() => deleteComplaint(item.id)}
-                    className={`${confirm === item.id ? "block" : "hidden"} bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
-                  >
-                    {isDeleting ? (
-                      <Oval
-                        visible={true}
-                        height="30"
-                        width="30"
-                        color="#fff"
-                        ariaLabel="oval-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                      />
-                    ) : (
-                      "تأكيد"
-                    )}
-                  </button>
+        allComplaints
+          .filter((item) =>
+            item.Customer.Account.name
+              .toLowerCase()
+              .includes(inputValue.toLowerCase()),
+          )
+          .map((item) => (
+            <>
+              <div
+                className="complaints max-h-screen overflow-y-scroll"
+                dir="rtl"
+              >
+                <div className="complaint border-primary flex items-center justify-between border-b pb-3">
+                  <div className="name flex flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">
+                      اسم المستخدم
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.Customer.Account.name}
+                    </p>
+                  </div>
+                  <div className="company flex flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">
+                      اسم الشركة
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.Company.Account.name}
+                    </p>
+                  </div>
+                  <div className="complaint-content flex w-[50%] flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">الشكوى</h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.content}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <button
+                      onClick={() => confirmToggle(item.id)}
+                      className="cursor-pointer rounded-xl bg-red-500 px-6 py-3 text-white"
+                    >
+                      حذف
+                    </button>
+                    <p
+                      className={`${confirm === item.id ? "block" : "hidden"} text-secondary text-xl`}
+                    >
+                      هل انت متأكد من الحذف
+                    </p>
+                    <button
+                      onClick={() => deleteComplaint(item.id)}
+                      className={`${confirm === item.id ? "block" : "hidden"} bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
+                    >
+                      {isDeleting ? (
+                        <Oval
+                          visible={true}
+                          height="30"
+                          width="30"
+                          color="#fff"
+                          ariaLabel="oval-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      ) : (
+                        "تأكيد"
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        ))
+            </>
+          ))
       ) : (
         <div className="flex items-center justify-center">
           <p className="text-secondary text-xl">لا يوجد شكاوي</p>

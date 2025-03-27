@@ -104,7 +104,9 @@ const AdvertisementSection = () => {
         <div className="addvs grid grid-cols-4 gap-5">
           {advertisement.length !== 0 ? (
             advertisement
-              .filter((item) => item.content.toLowerCase().includes(inputValue))
+              .filter((item) =>
+                item.content.toLowerCase().includes(inputValue.toLowerCase()),
+              )
               .map((item) => (
                 <div className="addv flex flex-col items-center gap-2">
                   <ModalImage
