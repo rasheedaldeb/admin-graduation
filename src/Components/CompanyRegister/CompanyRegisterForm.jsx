@@ -193,7 +193,6 @@ const CompanyRegisterForm = () => {
               type="file"
               id="image"
               className="hidden"
-              required
               onChange={(e) => setImage(e.target.files[0])}
             />
             <img
