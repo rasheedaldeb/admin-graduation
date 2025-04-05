@@ -19,6 +19,58 @@ const CompaniesSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [companiesData, setCompaniesData] = useState([]);
+  // active and disactive vars
+  const [active, setActive] = useState();
+  const [isActive, setIsActive] = useState(false);
+  const [activaiting, setActivaiting] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [activeError, setActiveError] = useState("");
+  const [confirm2, setConfirm2] = useState(null);
+  // active account form data
+  // open and close confirm2 section
+  const confirmToggle2 = (i) => {
+    if (confirm2 == i) {
+      return setConfirm2(null);
+    }
+    setConfirm2(i);
+  };
+  const activeData = new FormData();
+  activeData.append("isActive", active); // active and disActive api request
+  const activeAccount = async (id) => {
+    setActivaiting(true);
+    await axios
+      .put(
+        `${import.meta.env.VITE_API_URL}/api/auth/editAccount/${id}`,
+        activeData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res);
+        setActivaiting(false);
+        setSuccess(res.data.message);
+        setTimeout(() => {
+          setSuccess("");
+          setIsActive(!isActive);
+        }, 2000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setActivaiting(false);
+        setActiveError(err.response.data.message);
+        setTimeout(() => {
+          setActiveError("");
+        }, 2000);
+        if (err.status === 401) {
+          alert(err.response.data.message);
+          localStorage.removeItem("admintoken");
+          navigate("/admin-signin");
+        }
+      });
+  };
   useEffect(() => {
     const fetchCompanies = async () => {
       setIsLoading(true);
@@ -50,7 +102,7 @@ const CompaniesSection = () => {
       }
     };
     fetchCompanies();
-  }, [createdCompany, isDeleted]);
+  }, [createdCompany, isDeleted, isActive]);
   // delete logic
   // open and close confirm section
   const confirmToggle = (i) => {
@@ -92,7 +144,7 @@ const CompaniesSection = () => {
       });
   };
   return (
-    <section className="flex flex-col gap-10 px-10">
+    <section className="flex flex-col gap-10 px-6">
       <SectionHeader title="كافة الشركات" />
       <input
         type="text"
@@ -109,6 +161,16 @@ const CompaniesSection = () => {
       {deleteError && (
         <div className="flex items-center justify-center text-xl text-red-500">
           {deleteError}
+        </div>
+      )}
+      {success && (
+        <div className="flex items-center justify-center text-xl text-green-500">
+          {success}
+        </div>
+      )}
+      {activeError && (
+        <div className="flex items-center justify-center text-xl text-red-500">
+          {activeError}
         </div>
       )}
       <div className="companies max-h-screen overflow-y-scroll" dir="rtl">
@@ -131,70 +193,118 @@ const CompaniesSection = () => {
             )
             .map((item) => (
               <div className="company border-primary flex items-center justify-between border-b pb-3">
-                <div className="name flex flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">اسم الشركة</h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.name}
-                  </p>
-                </div>
-                <div className="email flex flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">
-                    البريد الالكتروني
-                  </h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.email}
-                  </p>
-                </div>
-                <div className="phone flex flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">
-                    رقم التواصل
-                  </h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.phone}
-                  </p>
-                </div>
-                <div className="auth-code flex flex-col items-center gap-3">
-                  <h4 className="text-primary text-xl font-bold">
-                    رقم السجل التجاري
-                  </h4>
-                  <p className="text-secondary text-lg font-bold">
-                    {item.authCode}
-                  </p>
-                </div>
-                <div className="delete flex flex-col items-center gap-2">
-                  <button
-                    onClick={() => {
-                      confirmToggle(item.id);
-                    }}
-                    className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-red-600 text-white"
-                  >
-                    حذف
-                  </button>
-                  <p
-                    className={`${confirm === item.id ? "block" : "hidden"} text-secondary text-xl`}
-                  >
-                    هل انت متأكد من الحذف
-                  </p>
-                  <button
-                    onClick={() => {
-                      deleteCompany(item.id);
-                    }}
-                    className={`${confirm === item.id ? "" : "hidden"} bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
-                  >
-                    {isDeleting ? (
-                      <Oval
-                        visible={true}
-                        height="30"
-                        width="30"
-                        color="#fff"
-                        ariaLabel="oval-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                      />
-                    ) : (
-                      "تأكيد"
-                    )}
-                  </button>
+                <div className="grid grid-cols-5 items-center gap-3">
+                  <div className="name flex flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">
+                      اسم الشركة
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.name}
+                    </p>
+                  </div>
+                  <div className="email flex flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">
+                      البريد الالكتروني
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.email}
+                    </p>
+                  </div>
+                  <div className="phone flex flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">
+                      رقم التواصل
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.phone}
+                    </p>
+                  </div>
+                  <div className="auth-code flex flex-col items-center gap-3">
+                    <h4 className="text-primary text-xl font-bold">
+                      رقم السجل التجاري
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.authCode}
+                    </p>
+                  </div>
+                  <div className="buttons flex items-center justify-center gap-5">
+                    <div className="active-disactive flex flex-col items-center gap-2">
+                      {item.isActive === false && (
+                        <button
+                          onClick={() => {
+                            setActive(true);
+                            confirmToggle2(item.id);
+                          }}
+                          className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-green-500 text-white"
+                        >
+                          تفعيل
+                        </button>
+                      )}
+                      {item.isActive === true && (
+                        <button
+                          onClick={() => {
+                            setActive(false);
+                            confirmToggle2(item.id);
+                          }}
+                          className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-amber-400 text-black"
+                        >
+                          الغاء التفعيل
+                        </button>
+                      )}
+                      <button
+                        onClick={() => activeAccount(item.id)}
+                        className={`${confirm2 === item.id ? "" : "hidden"} bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
+                      >
+                        {activaiting ? (
+                          <Oval
+                            visible={true}
+                            height="30"
+                            width="30"
+                            color="#fff"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                          />
+                        ) : (
+                          "تأكيد"
+                        )}
+                      </button>
+                    </div>
+                    <div className="delete flex flex-col items-center gap-2">
+                      <button
+                        onClick={() => {
+                          confirmToggle(item.id);
+                        }}
+                        className="h-[40px] w-[100px] cursor-pointer rounded-xl bg-red-600 text-white"
+                      >
+                        حذف
+                      </button>
+                      <p
+                        className={`${confirm === item.id ? "block" : "hidden"} text-secondary text-xl`}
+                      >
+                        هل انت متأكد من الحذف
+                      </p>
+                      <button
+                        onClick={() => {
+                          deleteCompany(item.id);
+                        }}
+                        className={`${confirm === item.id ? "" : "hidden"} bg-primary flex h-[40px] w-[100px] cursor-pointer items-center justify-center rounded-xl text-white`}
+                      >
+                        {isDeleting ? (
+                          <Oval
+                            visible={true}
+                            height="30"
+                            width="30"
+                            color="#fff"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                          />
+                        ) : (
+                          "تأكيد"
+                        )}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))
