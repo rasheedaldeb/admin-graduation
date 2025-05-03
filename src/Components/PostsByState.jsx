@@ -181,7 +181,7 @@ const PostsByState = () => {
               <div className="flex w-[70%] items-center gap-10">
                 <div className="image">
                   <img
-                    src={`https://real-estate-app-i5m8.onrender.com${item.mainImageUrl}`}
+                    src={`${import.meta.env.VITE_API_URL}${item.mainImageUrl}`}
                     alt="post-image"
                     className="h-[130px] w-[130px] rounded-xl"
                   />
@@ -202,7 +202,7 @@ const PostsByState = () => {
                           الشركة:
                         </h4>
                         <p className="text-secondary text-lg font-bold">
-                          {item.Account.name}
+                          {item.Account?.name}
                         </p>
                       </div>
                     </div>
