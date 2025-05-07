@@ -193,6 +193,14 @@ const ReservedPosts = () => {
                       {item.Customer.Account.phone}
                     </p>
                   </div>
+                  <div className="phone flex-col items-start gap-5">
+                    <h4 className="text-primary text-xl font-bold">
+                      اسم الشركة
+                    </h4>
+                    <p className="text-secondary text-lg font-bold">
+                      {item.Post.Account.name}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="delete flex items-center gap-7">
