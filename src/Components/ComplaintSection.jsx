@@ -123,7 +123,7 @@ const ComplaintSection = () => {
       ) : allComplaints.length !== 0 ? (
         allComplaints
           .filter((item) =>
-            item.Customer.Account.name
+            item.Company.Account.name
               .toLowerCase()
               .includes(inputValue.toLowerCase()),
           )
